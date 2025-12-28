@@ -110,10 +110,10 @@ def stop_ffmpeg(chat_id: int) -> None:
         try:
             process.terminate()
             process.wait(timeout=5)
-        except:
+        except (ProcessLookupError, subprocess.TimeoutExpired):
             try:
                 process.kill()
-            except:
+            except (ProcessLookupError, OSError):
                 pass
     ffmpeg_processes[chat_id] = None
     stream_status[chat_id] = "stopped"
@@ -121,7 +121,7 @@ def stop_ffmpeg(chat_id: int) -> None:
 def format_duration(seconds: int) -> str:
     try:
         seconds = int(seconds or 0)
-    except:
+    except (ValueError, TypeError):
         seconds = 0
     mins, secs = divmod(seconds, 60)
     hours, mins = divmod(mins, 60)
@@ -137,7 +137,7 @@ def ytdl_extract_with_fallback(query: str, video: bool = True) -> Tuple[Optional
             if "entries" in info and info["entries"]:
                 info = info["entries"][0]
             return info, True
-    except:
+    except Exception:
         pass
     
     opts_no_cookies = YTDL_OPTS_NO_COOKIES.copy()
@@ -149,7 +149,7 @@ def ytdl_extract_with_fallback(query: str, video: bool = True) -> Tuple[Optional
             if "entries" in info and info["entries"]:
                 info = info["entries"][0]
             return info, False
-    except:
+    except Exception:
         return None, False
 
 def run_ffmpeg(chat_id: int, cmd: List[str], input_file: Optional[str] = None, stream_data: Dict = None) -> None:
@@ -191,7 +191,7 @@ def run_ffmpeg(chat_id: int, cmd: List[str], input_file: Optional[str] = None, s
         if input_file and os.path.exists(input_file):
             try:
                 os.unlink(input_file)
-            except:
+            except FileNotFoundError:
                 pass
         asyncio.run(start_next_in_queue(chat_id))
 
@@ -205,7 +205,7 @@ async def start_next_in_queue(chat_id: int) -> None:
     if not url:
         try:
             await item["msg"].edit("No RTMP key configured.")
-        except:
+        except Exception:
             pass
         return
     
@@ -214,10 +214,10 @@ async def start_next_in_queue(chat_id: int) -> None:
             await item["msg"].reply_photo(item["thumbnail"], caption=item["caption"])
         else:
             await item["msg"].edit(item["caption"])
-    except:
+    except Exception:
         try:
             await item["msg"].edit(item["caption"])
-        except:
+        except Exception:
             pass
     
     stop_ffmpeg(chat_id)
@@ -289,7 +289,7 @@ Start streaming with /help or /setkey"""
             caption=text,
             reply_markup=buttons
         )
-    except:
+    except Exception:
         await m.reply(text, reply_markup=buttons)
 
 @bot.on_callback_query(filters.regex("cmds"))
@@ -338,10 +338,10 @@ Start streaming with /help or /setkey"""
     
     try:
         await query.message.edit_caption(caption=text, reply_markup=buttons)
-    except:
+    except Exception:
         try:
             await query.message.edit_text(text, reply_markup=buttons)
-        except:
+        except Exception:
             pass
 
 @bot.on_message(filters.command("setkey"))
@@ -424,7 +424,7 @@ async def broadcast(_, m: Message):
         try:
             await bot.send_message(user['user_id'], message)
             sent += 1
-        except:
+        except Exception:
             pass
     
     await m.reply(f"Broadcast sent to {sent} users.")
