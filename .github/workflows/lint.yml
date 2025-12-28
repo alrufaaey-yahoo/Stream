@@ -19,8 +19,8 @@ jobs:
         run: |
           pip install ruff black
 
-      - name: Ruff (bug + async checks)
-        run: ruff .
+      - name: Ruff (lint checks)
+        run: ruff check .
 
       - name: Black (format check)
         run: black --check .
