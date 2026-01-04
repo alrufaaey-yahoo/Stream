@@ -43,8 +43,8 @@ Inspired by the power and precision of *Gojo Satoru* from Jujutsu Kaisen, the bo
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/TheErenJeager/SatoruGojo.git
-   cd SatoruGojo
+   git clone https://github.com/alrufaaey-yahoo/Stream.git
+   cd Stream 
    ```
 
 2. **Install dependencies**
