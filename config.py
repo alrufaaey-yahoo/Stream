@@ -9,4 +9,4 @@ API_HASH = os.getenv("API_HASH", "d1643888aaf2da525b496d9f738f3668")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8373798184:AAHAoDZKvSejuwYYbBlFBtDyiHNZGJJiOTc")
 DEFAULT_RTMP_URL = "rtmps://dc4-1.rtmp.t.me/s/2519683084:WtASbEKfu1AWCSWEo94cgA"
 LOGGER_ID = int(os.getenv("LOGGER_ID", -1002519683084))
-MONGO_URL = os.getenv("MONGO_URL", "mongodb+srv://alrufaaey:engmomo@cluster0.codtlum.mongodb.net/")
+MONGO_URL = os.getenv("MONGO_URL", "mongodb+srv://alrufaaey:engmomo@cluster0.codtlum.mongodb.net/?appName=Cluster0")
